@@ -1,0 +1,47 @@
+import heapq
+class Solution:
+    
+    def jiayouzhan(self,d, p, l1, l2):#d距离  #p油量  l1:每个加油站距离终点的距离  l2:每个加油站的油量  l1和l2的关系是对应的
+	'''
+	我依旧是分析了林沐老师的算法思路和结合了自己的想法写这道题：
+		首先，必须使用贪心算法，贪心的规律是：
+			1.如果油箱的油够到终点，不需要加油
+			2.如果不够，我们在油量用完之前，找到所能到达的油量最大的加油站加油
+		循环该贪心的规律，用起点距离终点的距离d（永远是给定函数的d值）和油箱中的油量p值（不断加油，p不断增大）
+		作比较，如果p>=d 则循环结束 判断加油几次（用res进行计数）
+
+	其中我用了heapq 最小堆（进行了转换，变成了最大堆） list和list逆置 和栈的弹出（防止加油站被多计
+											入heap中）
+		
+
+
+
+
+	'''
+        heap = []  #作为最大堆使用 
+        if p==d:   #初始判断p和d的关系
+            return 0
+        dis = [d-i for i in l1]  #dis记录了各个加油站与起始点的距离
+        #print(dis)
+        res = 0     #结果值 加油次数
+        diss = dis[::-1]  # 将dis翻转赋给diss  因为diss中的元素不能重复 采用pop()的方法
+        #print('diss=', diss)
+        while d>p:  
+	#当d>p 的时候循环 
+            while diss and diss[-1]<=p: #当diss存在 并且 diss栈顶值（距离起始点的位置）小于p油量时
+                #print(diss[-1])
+                heapq.heappush(heap, -l2[dis.index(diss.pop())]) 
+		### 将值加入最大堆（由于heapq只内置了最小堆，我们需要加上“-”号，使其变成最大堆）
+            #print('heap=',heap)
+	    #循环结束之后，由于d肯定是大于p的（要不然不会进大的循环），我们取出所经历的加油站中油量最多的
+            a = -heapq.heappop(heap)  #（取出时记得加“-”变为正数）
+            #print('a=', a)
+            res += 1  #计数结果+1
+            p = p+a   #油量更新
+                
+        return res  #返回结果   
+                    
+n = Solution()
+#print('最终的结果是：',n.jiayouzhan(25, 16, [15,11,10,4], [2,5,3,4]))
+print('最终的结果是：',n.jiayouzhan(4, 3, [3,2], [1,2]))            
+      

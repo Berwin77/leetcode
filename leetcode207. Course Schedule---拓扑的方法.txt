@@ -1,0 +1,36 @@
+class Solution:
+    def canFinish(self, numCourses, prerequisites):
+        """
+        :type numCourses: int
+        :type prerequisites: List[List[int]]
+        :rtype: bool
+        """
+        
+        s = [[]*numCourses]
+        print(s)
+        for a in prerequisites:
+            i = a[0]
+            j = a[-1]
+            s[j].append(i)
+        G = {}
+        for c, d in enumerate(s):
+            G[c] = d
+        print(G)
+        ind = {v:0 for v in G}  ##初始化每个数字的入度数值
+        print('ind=', ind)
+        print(list(G.values()))    ###python3中取消了dict的value迭代方法  itervalues 所以用 list（G.values） 代替  G.value是生成一个字典对象
+        for v in list(G.values()):
+            ind[v]+=1  ##统计每个数值的入度值
+        q = [v for v in G if ind[v]==0]
+        i = 0
+        while i<len(q):
+            for e in G[q[i]]:
+                ind[e] -=1
+                if ind[e] == 0:
+                    q.append(e)
+            i += 1
+        if i == len(G):  ###无回环 i=len(G)
+            return True
+        else:            ###有回环 就会提前终止，导致i<len(G)
+            return False
+                

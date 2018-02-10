@@ -1,0 +1,40 @@
+class Solution:
+    def binary_search(self, sortl1,target):
+        
+        
+        while sortl1:
+            if target>sortl1[-1] or target<sortl1[0]:
+                return False
+            mid = len(sortl1)//2
+            if target == sortl1[mid]:
+                return True
+            elif target < sortl1[mid]:
+                sortl1 = sortl1[:mid]
+            else:
+                sortl1 = sortl1[mid+1:]
+        return False
+a = Solution()
+print(a.binary_search([1,2,4,5], 2))    
+
+
+第一种的缺点是没法直接显示mid的具体数值   所以有了第二种：
+
+
+class Solution:
+    def binary_search(self, sortl1,target):
+        begin = 0
+        end = len(sortl1)-1        
+        while begin<=end:
+
+            mid = (begin+end)//2
+            if target == sortl1[mid]:
+                return True
+            elif target < sortl1[mid]:
+                end = mid-1
+            else:
+                begin = mid+1
+        return False
+a = Solution()
+c = [-1,2,5,20,90,100,207,800]
+print(a.binary_search(c,200))  
+第二种能清晰地显示出该元素在数组的具体位置 

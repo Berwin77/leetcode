@@ -1,0 +1,46 @@
+## 自己写的
+class Solution:
+    def pathToSum(self, node, s, l):
+        if node is None: 
+            return 
+        if node.left==None and node.right == None:
+            if node.val == s:
+                l.append(node.val)
+                self.res.append(l)
+                return 
+        l.append(node.val)
+        self.pathToSum(node.left, s-node.val, l.copy())###一定要记住深浅拷贝， 在迭代里的list set dict 就相当于自带self.  
+        self.pathToSum(node.right, s-node.val, l.copy())
+        
+    def pathSum(self, root, sum):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: List[List[int]]
+        """
+        self.res = []
+        self.pathToSum(root, sum, [])
+        return self.res
+## 最快速 
+
+from collections import deque
+class Solution:
+    def pathSum(self, root, s):
+        """
+        :type root: TreeNode
+        :type sum: int
+        :rtype: List[List[int]]
+        """
+        res = []
+        self.pathsum(root, s, res, list())
+        return res
+    def pathsum(self, node, su, result, tempresult):
+        if not node:
+            return
+        tempresult.append(node.val)
+        if not (node.left or node.right) and su == node.val:
+            result.append(list(tempresult))
+        else:
+            self.pathsum(node.left, su-node.val, result, tempresult)
+            self.pathsum(node.right, su-node.val, result, tempresult)
+        tempresult.pop()

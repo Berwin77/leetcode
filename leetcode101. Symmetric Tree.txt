@@ -1,0 +1,36 @@
+class Solution:
+    def isSymmetric(self, root):
+        if not root:
+            return True
+        from collections import deque
+        q = deque([[root, 0]])
+        d = {0 : [root.val] }
+        while q:
+            a, n = q.popleft()
+            if a.left:
+                q.append([a.left, n+1])
+                if n+1 in d:
+                    d[n+1].append(a.left.val)
+                else:
+                    d[n+1] = [a.left.val]
+            else:
+                if n+1 in d:
+                    d[n+1].append(-1)
+                else:
+                    d[n+1] = [-1]
+            if a.right:
+                q.append([a.right, n+1])
+                if n+1 in d:
+                    d[n+1].append(a.right.val)
+                else:
+                    d[n+1] = [a.right.val]
+            else:
+                if n+1 in d:
+                    d[n+1].append(-1)
+                else:
+                    d[n+1] = [-1]
+        print(d)
+        for i, j in d.items():
+            if j != j[::-1]:
+                return False
+        return True

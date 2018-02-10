@@ -1,0 +1,45 @@
+class Solution:
+    def getSize(self, h):
+        c = 0
+        while h:
+            c += 1
+            h = h.next
+        return c
+    def reorderList(self, head):
+        """
+        :type head: ListNode
+        :rtype: void Do not return anything, modify head in-place instead.
+        """
+        if head is None or head.next is None:
+            return 
+        
+        l = self.getSize(head)
+        if l%2 == 0:
+            n = l//2 -1
+        else:
+            n = l//2
+        node = head
+        i = 0
+        while i!=n:
+            i += 1
+            node = node.next
+        tmp = node.next
+        node.next = None
+        node = tmp
+        
+        newnode = None
+        while node:
+            temp = node.next
+            node.next = newnode
+            newnode = node
+            node = temp
+        while head:
+            if newnode:
+                t1 = head.next
+                t2 = newnode.next
+                head.next = newnode
+                newnode.next = t1
+                newnode = t2
+                head = t1
+            else:
+                head = head.next

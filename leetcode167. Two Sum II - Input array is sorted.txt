@@ -1,0 +1,25 @@
+##两种方法
+###  1.字典
+class Solution:
+    def twoSum(self, numbers, target):
+
+        d = {}
+        for k, v in enumerate(numbers, start=1):
+            if target - v in d:
+                return [d[target-v], k]
+            d[v] = k
+###  2.双指针
+class Solution:
+    def twoSum(self, numbers, target):
+
+        begin = 0
+        end = len(numbers)-1
+        while True:
+            ssum = numbers[begin] + numbers[end]
+            if ssum > target:
+                end -= 1
+            elif ssum < target:
+                begin += 1
+            else:
+                return [begin+1, end+1]
+            

@@ -1,0 +1,12 @@
+class Solution:
+    def BST_insert(self, node,newnode):
+        if node.val>newnode.val:
+            if node.left:
+                self.BST_insert(node.left, newnode)
+            else:
+                node.left = newnode
+        else:
+            if node.right:
+                self.BST_insert(node.right, newnode)
+            else:
+                node.right = newnode

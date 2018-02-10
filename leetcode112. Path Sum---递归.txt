@@ -1,0 +1,9 @@
+class Solution:
+    def toSum(self, node, s):
+        if node is None:
+            return False
+        if not node.left and not node.right:
+            return node.val == s
+        return self.toSum(node.left, s-node.val) or self.toSum(node.right, s-node.val)
+    def hasPathSum(self, root, sum):
+        return self.toSum(root, sum)

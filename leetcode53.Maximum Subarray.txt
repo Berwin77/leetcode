@@ -1,0 +1,11 @@
+class Solution:
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        l = [0]
+        for i in range(len(prices)-1):
+            mi = max(prices[i+1:])
+            l.append(mi-prices[i])
+        return max(l)

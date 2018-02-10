@@ -1,0 +1,17 @@
+class Solution:
+    def g(self, c, t, start, val):
+        if t == 0:
+            self.s.append(val)
+        for i in range(start, len(c)):
+            if t <0:
+                break
+            self.g(c, t-c[i], i, val+[c[i]])
+    def combinationSum(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        self.s = []
+        self.g(candidates, target, 0, [])
+        return self.s

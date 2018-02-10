@@ -1,0 +1,59 @@
+##递归二叉树前序遍历   击败了0.67%
+class Solution:
+    def preorder(self, node):
+        if node == None:
+            return 
+        if node.val not in self.res:
+            self.res.append(self.target - node.val)
+        elif node.val in self.res:
+            self.b = True
+            self.res.append(self.target - node.val)
+        self.preorder(node.left)
+        self.preorder(node.right)
+        
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        self.b = False
+        self.target = k
+        self.res = []
+        self.preorder(root)
+        return self.b
+
+##迭代二叉树前序遍历 击败了1.33%
+class Solution:    
+    def findTarget(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: bool
+        """
+        if not root:
+            return False
+        l = [root]
+        res = []
+        while l:
+            a = l.pop()
+            if a.val in res:
+                return True
+            else:
+                res.append(k-a.val)
+            if a.left:
+                l.append(a.left)
+            if a.right:
+                l.append(a.right)
+        return False
+##最快大神：就是把res的list 换成set类型
+class Solution:
+    def findTarget(self, root, k):
+        if not root: return False
+        bfs, s = [root], set()
+        for i in bfs:
+            if k - i.val in s: return True
+            s.add(i.val)
+            if i.left: bfs.append(i.left)
+            if i.right: bfs.append(i.right)
+        return False

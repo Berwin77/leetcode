@@ -1,0 +1,100 @@
+###利用python特性
+class Solution:
+    def addBinary(self, a, b):
+        return bin(int(a, 2) + int(b,2))[2:]
+###大神的
+class Solution:
+    def addBinary(self, a, b):
+        na = len(a)
+        nb = len(b)
+        if na > nb:
+            b = '0'*(na-nb) + b
+        else:
+            a = '0'*(nb-na) + a
+        c = ''
+        _c = 0
+        n = len(a)
+        a = a[::-1]
+        b = b[::-1]
+        for i in range(n):
+            _a = int(a[i])
+            _b = int(b[i])
+            _c = _a + _b + _c
+            if _c == 0:
+                c += '0'
+            elif _c == 1:
+                c += '1'
+                _c = 0
+            elif _c == 2:
+                c += '0'
+                _c = 1
+            elif _c == 3:
+                c += '1'
+                _c = 1
+        if _c == 1:
+            c += '1'
+        return c[::-1]
+###自己写 击败了1.39%
+
+class Solution:    
+    def addBinary(self, a, b):
+        if a == '':
+            return b
+        if b =='':
+            return a
+        na = len(a)
+        nb = len(b)
+        aa = a[::-1]
+        bb = b[::-1]
+        ss = []
+        l = 0
+        if na>nb:
+            l = nb
+            ss = aa[l:]
+        elif nb>na:
+            l = na
+            ss = bb[l:]
+        else:
+            l = na
+        i = 0
+        signal = 0
+        s = ''
+        while i < l:
+            if signal == 0:
+                if int(aa[i]) + int(bb[i]) == 2:
+                    signal = 1
+                    s += '0'
+                else:
+                    s += str(int(aa[i]) + int(bb[i]))
+            else:
+                if int(aa[i]) + int(bb[i]) +signal >= 2:
+                    s += str(int(aa[i]) + int(bb[i]) +signal-2)
+                else:
+                    s += str(int(aa[i]) + int(bb[i]) + signal)
+                    signal = 0
+            i += 1
+        print(ss)
+        if ss == []:
+            if signal == 1:
+                return (s+'1')[::-1]
+            else:
+                return s[::-1]
+        else:
+            if signal == 0:
+                return (s+ss)[::-1]
+            else:
+                print('--------------------')
+                sss = ''
+                for i in ss:
+                    if signal == 1:
+                        if int(i)+signal >= 2:
+                            sss += str(int(i)+signal-2)
+                        else:
+                            sss += str(int(i) + signal)
+                            signal = 0
+                    else:
+                        sss += i
+                if signal ==1:
+                    return (s+sss+'1')[::-1]
+                else:
+                    return (s+sss)[::-1]

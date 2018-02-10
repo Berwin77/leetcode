@@ -1,0 +1,16 @@
+class Solution:
+    def maxDepth(self, root):
+        if not root:
+            return 0
+        from collections import deque
+        q = deque([[root, 1]])
+        ans = 1
+        while q:
+            a, i = q.popleft()
+            if a.left:
+                q.append([a.left, i+1])
+                ans = i+1
+            if a.right:
+                q.append([a.right, i+1])
+                ans = i+1
+        return ans

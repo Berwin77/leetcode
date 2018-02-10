@@ -1,0 +1,18 @@
+class Solution:
+    def g(self, c, t, start, val):
+        if t ==0 and val not in self.res:
+            self.res.append(val)
+        for i in range(start, len(c)):
+            if t < 0:
+                break
+            self.g(c, t-c[i], i+1, val+[c[i]])
+    def combinationSum2(self, candidates, target):
+        """
+        :type candidates: List[int]
+        :type target: int
+        :rtype: List[List[int]]
+        """
+        c = sorted(candidates, reverse = 1)
+        self.res  = []
+        self.g(c, target, 0, [])
+        return self.res

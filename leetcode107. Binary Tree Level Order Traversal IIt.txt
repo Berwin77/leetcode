@@ -1,0 +1,25 @@
+class Solution:
+    def levelOrderBottom(self, root):
+        if not root:
+            return []
+        from collections import deque
+        q = deque([[root, 1]])
+        d = {1:[root.val]}
+        while q:
+            a, i = q.popleft()
+            if a.left:
+                q.append([a.left, i+1])
+                if i+1 not in d:
+                    d[i+1] = [a.left.val]
+                else:
+                    d[i+1].append(a.left.val)
+            if a.right:
+                q.append([a.right, i+1])
+                if i+1 not in d:
+                    d[i+1] = [a.right.val]
+                else:
+                    d[i+1].append(a.right.val)
+        res = []
+        for i in d:
+            res.append(d[i])
+        return res[::-1]

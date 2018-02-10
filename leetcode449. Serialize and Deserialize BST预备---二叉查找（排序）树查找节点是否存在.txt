@@ -1,0 +1,14 @@
+
+def BST_search(self, node, val):
+    if node.val == val:
+        return True
+    if node.val>val:
+        if node.left:
+            return self.BST_search(node.left, val)
+        else:
+            return False
+    else:
+        if node.right:
+            return self.BST_search(node.right, val)
+        else:
+            return False

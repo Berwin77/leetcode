@@ -1,0 +1,20 @@
+class Solution:
+    def g(self, c, t, start, val):
+        if t==0 and len(val) == self.k:
+            self.res.append(val)
+        else:
+            for i in range(start, len(c)):
+                if t<0:
+                    break
+                self.g(c, t-c[i], i+1, val+[c[i]])
+    def combinationSum3(self, k, n):
+        """
+        :type k: int
+        :type n: int
+        :rtype: List[List[int]]
+        """
+        self.res = []
+        self.k = k
+        c = [i for i in range(1,10)]
+        self.g(c, n, 0, [])
+        return self.res

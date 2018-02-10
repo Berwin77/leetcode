@@ -1,0 +1,61 @@
+复杂度：O(logn)
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if not nums:
+            return -1
+        
+        begin = 0
+        end = len(nums)-1
+        
+        if target == nums[begin]:
+            return begin
+        if target == nums[end]:
+            return end
+        while begin<=end:
+            mid = (begin+end)//2
+            if target == nums[mid]: 
+                return mid
+            elif target<nums[mid]: 
+                if nums[begin]<nums[mid]:   ###确定该区间是正常区间
+                    if target<nums[begin]:   ##如果target小于正常区间的第一个值，那么肯定在旋转区间
+                        begin = mid+1
+                    else:  ###target大于正常区间第一个值， 就在正常区间内 
+                        end = mid-1
+                elif nums[begin] > nums[mid]:###确定该区间是旋转区间
+                    end = mid-1
+                elif nums[begin]==nums[mid]:  ##begin和mid重合
+                    begin = mid+1
+            elif target>nums[mid]:
+                if nums[begin]<nums[mid]:  ##该区间为正常区间
+                    begin = mid+1
+                    
+                elif nums[begin]>nums[mid]:###区间为反转区间
+                    if target>=nums[begin]:
+                        end = mid-1
+                    else:
+                        begin = mid+1
+                                                                                
+                elif nums[begin] == nums[mid]:  ###end和mid重合
+                    begin = mid+1
+        return -1
+                    
+
+
+#####python调用：  直接用方法  但是复杂度O(n)
+
+class Solution:
+    def search(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        if target not in nums:
+            return -1
+        else:
+            return nums.index(target)

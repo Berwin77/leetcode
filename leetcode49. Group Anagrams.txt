@@ -1,0 +1,16 @@
+class Solution:
+    def groupAnagrams(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: List[List[str]]
+        """
+        di = {}
+        for s in strs:
+            if str(sorted(s)) not in di:
+                
+                di[str(sorted(s))] = [s]
+            else:
+                di[str(sorted(s))].append(s)
+        l = list(di.values())
+        return l
+                

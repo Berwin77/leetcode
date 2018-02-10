@@ -1,0 +1,29 @@
+
+class Solution(object):
+    def lowestCommonAncestor(self, root, p, q):
+        """
+        :type root: TreeNode
+        :type p: TreeNode
+        :type q: TreeNode
+        :rtype: TreeNode
+        """
+        if root in [None, p, q]:
+            return root
+        stack = [root]
+        parent = {root:None}
+        while q not in parent or p not in parent:
+            s = stack.pop()
+            if s.left:
+                parent[s.left] = s
+                stack.append(s.left)
+            if s.right:
+                parent[s.right] = s
+                stack.append(s.right)
+        sett = set()
+        while q:
+            sett.add(q)
+            q = parent[q]
+        while p not in sett:
+            p = parent[p]
+        return p
+            

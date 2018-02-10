@@ -1,0 +1,19 @@
+###这段代码是网上的大牛写的，很简洁，并且很有技巧性
+###他的遍历顺序不是左中右 或者左右中   而是反其道的右左中的顺序  先找到链表最后一个点，将最后一个点的right
+### 值设为 self.p   left值为None    self.p变成最后一个点  一次递归   简洁巧妙
+class Solution(object):
+    def trans(self, root):
+        if not root:
+            return 
+        self.trans(root.right)
+        self.trans(root.left)
+        root.right = self.p
+        root.left = None
+        self.p = root
+    def flatten(self, root):
+        """
+        :type root: TreeNode
+        :rtype: void Do not return anything, modify root in-place instead.
+        """
+        self.p = None
+        self.trans(root)

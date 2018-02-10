@@ -1,0 +1,36 @@
+class Solution:
+    def searchRange(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: List[int]
+        """
+        s = -5
+        if not nums:
+            return [-1, -1]
+        begin = 0
+        end = len(nums)-1
+        if target == nums[begin]:
+              s = 0
+        else:
+            while begin<=end:
+                mid = (begin+end)//2
+                if target==nums[mid] and nums[mid-1]!=target:
+                        s = mid
+                        break
+                elif target<=nums[mid]:
+                    end = mid-1
+                elif target>nums[mid]:
+                    begin = mid+1
+        if s==-5:
+            return [-1,-1]
+        else:
+            i = s 
+        while i < len(nums):
+            if nums[i] != nums[s]:
+                break
+            i = i+1
+        if i == len(nums):
+            return [s, len(nums)-1]
+        else:
+            return [s, i-1]

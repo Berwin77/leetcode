@@ -1,0 +1,21 @@
+class Solution:
+    def g(self,s, left, right): #s存放结果的list left当前还可以放置左括号的数量  right当前还可以放置右括号的数量
+        print('s=', s)
+        if left == right==0:
+            self.res.append(''.join(s))
+            return 
+        if left > 0: #限定条件1： 左括号先行
+            self.g(s+['('], left-1, right)
+        if (left<right):# 限定条件2：右括号的放置在左括号之后
+           
+            self.g(s+[')'], left, right-1)
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        self.res = []
+        self.g([], n,n)
+        
+        return self.res
+    

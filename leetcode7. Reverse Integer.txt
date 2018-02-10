@@ -1,0 +1,30 @@
+class Solution:
+    def reverse(self, x):
+        """
+        :type x: int
+        :rtype: int
+        """
+        t = 2**31
+        if x >= t:
+            return 0
+        res = []
+        s = str(x)
+        signal = 0
+        if s[0] == '-':
+            signal = 1
+            s = s[1:]
+        nums = int(s)
+        while nums!=0:
+            a = nums%10
+            res.append(str(a))
+            nums = nums//10
+        if res == []:
+            return 0
+        ans = int(''.join(res))
+        if ans<t:
+            if signal==1:
+                return -int(ans)
+            else:
+                return int(ans)
+        else:
+            return 0

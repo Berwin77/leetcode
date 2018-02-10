@@ -1,0 +1,14 @@
+import bisect
+class Solution:
+    def countSmaller(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        bst = []
+        ans = []
+        for n in nums[::-1]:   #nums[::-1]可以换为reversed(nums) 这个是迭代器 
+            idx = bisect.bisect_left(bst, n) #在L中查找x，x存在时返回x左侧的位置，x不存在返回应该插入的位置
+            ans.append(idx)        
+            bisect.insort(bst, n)   #插入n元素，再对bst进行排序
+        return ans[::-1]

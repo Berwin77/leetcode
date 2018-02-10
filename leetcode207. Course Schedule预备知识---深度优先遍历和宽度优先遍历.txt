@@ -1,0 +1,25 @@
+
+##深度遍历图（有向和无向均可）
+### 类似于二叉树的前序遍历
+def DfsGraph(self, G, v):
+    res = set()
+    s = [v]
+    while s:
+        a = s.pop()
+        if a not in res:
+            res.add(a)
+            s.extend(G(u))
+
+
+##宽度遍历图（有向和无向均可）
+### 类似于二叉树的层序遍历
+import collections
+def DfsGraph(self, G, v):
+    res = set()
+    s = collections.deque()
+    s.append(v)
+    while s:
+        a = s.popleft()
+        if a not in res:
+            res.add(a)
+            s.extend(G(u))

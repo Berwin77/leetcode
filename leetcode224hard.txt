@@ -1,0 +1,19 @@
+    def trans(s):
+        
+        l = []
+        res = 0
+        num = 0
+        i = 0
+        for i in range(len(s)):
+            if s[i].isdigit():
+                while s[i].isdigit():
+                    res = s[i] - '0'
+                    num = num*10 + res
+                    i += 1
+                l.append(num)
+            elif s[i] in '()+-':
+                l.append(s[i])
+                i += 1
+            else:
+                i += 1
+        return l

@@ -1,0 +1,37 @@
+class BSTnode:
+    def __init__(self, x):
+        self.val = x
+        self.count = 0  ####计算有多少个数字小于自己
+        self.left = None
+        self.right = None
+class Solution:
+    def BST_insert(self, node, newnode, count_sum):  
+        ###计算当前的二叉树有多少个值小于插入点
+        if node.val >= newnode.val:
+            node.count += 1  ##小于根节点，根节点的count值+1
+            if node.left:
+                self.BST_insert(node.left, newnode, self.count_sum)
+            else:
+                node.left = newnode
+        else:
+            self.count_sum += node.count+1   ##大于根节点 count_sum值等于根节点count+1
+            if node.right:
+                self.BST_insert(node.right, newnode, self.count_sum)
+            else:
+                node.right = newnode
+    def countSmaller(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        if not nums:
+            return []
+        rnums = nums[::-1]
+        root = BSTnode(rnums[0])
+        count = [0]  ###存所有结点的count_sum
+        for i in rnums[1:]:
+            self.count_sum = 0
+            self.BST_insert(root, BSTnode(i), self.count_sum)
+            count.append(self.count_sum)
+        
+        return count[::-1]

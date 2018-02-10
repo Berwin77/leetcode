@@ -1,0 +1,26 @@
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        if nums == []:
+            return 
+        if len(nums) == 1:
+            return nums[-1] 
+        nums = sorted(nums)
+        for i in range(0, len(nums)-1, 2):
+            if nums[i] != nums[i+1]:
+                return nums[i]
+        return nums[-1]
+###标准
+class Solution:
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        res = 0
+        for n in nums:
+            res ^= n  ##异或 相同为0  不同为1
+        return res

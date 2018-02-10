@@ -1,0 +1,57 @@
+import heapq as hp
+class MedianFinder:
+    
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.lheap = []
+        self.sheap = []
+    def addNum(self, num):
+        """
+        :type num: int
+        :rtype: void
+        """
+        lheap = self.lheap
+        sheap = self.sheap
+        if not lheap and not sheap:
+            hp.heappush(sheap, num)
+        elif len(lheap) == len(sheap):
+            if num >= -lheap[0]:
+                hp.heappush(sheap, num)
+            elif num < -lheap[0]:
+                hp.heappush(lheap, -num)
+        elif len(lheap) > len(sheap):
+            if num >= -lheap[0]:
+                hp.heappush(sheap, num)
+            else:
+                a = -hp.heappop(lheap)
+                hp.heappush(sheap, a)
+                hp.heappush(lheap, -num)
+        elif len(lheap) < len(sheap):
+            if num <= sheap[0]:
+                hp.heappush(lheap, -num)
+            else:
+                b = -hp.heappop(sheap)
+                hp.heappush(lheap, b)
+                hp.heappush(sheap, num)
+       
+    def findMedian(self):
+        """
+        :rtype: float
+        """
+        lheap = self.lheap
+        sheap = self.sheap
+        if len(lheap) == len(sheap):
+            return (-lheap[0]+sheap[0])/2.0
+        elif len(lheap) > len(sheap):
+            return -lheap[0]/1.0
+        elif len(sheap) > len(lheap):
+            return sheap[0]/1.0
+        
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()

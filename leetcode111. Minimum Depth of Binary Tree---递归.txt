@@ -1,0 +1,20 @@
+class Solution:
+    def mdepth(self, node):
+        if not node:
+            return 0
+        if not node.left and not node.right:
+            return 1
+        if not node.left:
+            return self.mdepth(node.right)+1
+        if not node.right:
+            return self.mdepth(node.left)+1
+        dl = self.minDepth(node.left)
+        dr = self.minDepth(node.right)
+        return min(dl, dr)+1
+    def minDepth(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        return self.mdepth(root)
+        

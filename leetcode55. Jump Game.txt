@@ -1,0 +1,29 @@
+class Solution:
+    def canJump(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if len(nums) ==1:
+            return True
+        k = 0       #引入k防止死循环
+        i = 0
+        j = 0
+        n = len(nums)
+        tmp = 0
+        while i < n:
+            k = i  #将刚进入循环的i赋值给k
+            if i+nums[i]+1>=n:
+                return True
+            else:
+                
+                for j in range(i, i+1+nums[i]):
+                    if j+1+nums[j]>=n:
+                        return True
+                    else:
+                        if tmp<j+1+nums[j]:
+                            i = j
+                            tmp = j+1+nums[j]
+                if i == k: #判断新的i是否等于k  如果等于 相当于死循环 返回False
+                    return False
+                        

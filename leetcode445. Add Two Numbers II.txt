@@ -1,0 +1,57 @@
+class Solution:
+    def getSize(self, a):
+        i = 0
+
+        while a:
+            i += 1
+            a = a.next
+        return i
+            
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+
+        len1 = self.getSize(l1)
+        len2 = self.getSize(l2)
+        lenx = len1 - len2
+        if lenx < 0:
+            temp = l1
+            l1 = l2
+            l2 = temp
+            lenx = -lenx
+            t = len1
+            len1 = len2
+            len2 = t
+        p = h = ListNode(0)
+        while lenx:
+            p.next = ListNode(0)
+            p = p.next
+            p.val = l1.val
+            l1 = l1.next
+            lenx -= 1
+        while len2:
+            p.next = ListNode(0)
+            p = p.next
+            p.val = l1.val+l2.val
+            
+            l1 = l1.next
+            l2 = l2.next
+            len2 -= 1
+        p = h
+        
+        while p:
+            q = p.next
+            while q and q.val==9:
+                q = q.next
+            if q and q.val>9:
+                while p!=q:
+                    p.val += 1
+                    p = p.next
+                    p.val -= 10
+            else:
+                p = p.next
+                    
+        return h if h.val else h.next

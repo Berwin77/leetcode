@@ -1,0 +1,33 @@
+##低级
+class Solution:
+    def lengthOfLastWord(self, s):
+        if s == '':
+            return 0
+        ss = s[::-1].strip()
+        i = 0
+        while i < len(ss):
+            if ss[i] == ' ':
+                return i
+            i+=1
+        return i
+##中级
+class Solution:
+    def lengthOfLastWord(self, s):
+	s = s.strip()
+        if len(s)==0:
+            return 0
+        n = len(s)-1
+        i = len(s)-1
+        while i > 0:
+            if s[i] == ' ':
+                return n-i
+            i-=1
+        return len(s)
+##高级
+class Solution:
+    def lengthOfLastWord(self, s):
+        l = s.split()
+        if len(l)==0:
+            return 0
+        n = l[-1]
+        return len(n)

@@ -1,0 +1,29 @@
+class Solution:
+    def simplifyPath(self, path):
+        """
+        :type path: str 
+        :rtype: str
+        """
+        if path[-1] =='/':
+            path = path[0:-1]
+        s = path.split('/')
+        l = []
+        
+        for i in s:
+
+            if i == '..':
+                if l:
+                    l.pop()
+            elif i == '.' or i =='':
+                continue
+
+            else :
+                l.append(i)
+        st = ''
+        if not l:
+            return '/'
+        k = 0
+        while k<len(l):
+            st += '/'+l[k]
+            k += 1
+        return st

@@ -1,0 +1,26 @@
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if s == '':
+            return 0
+        end = 0
+        begin = 0
+        res = []
+        word = []
+        while end<len(s):
+            while end<len(s) and s[end] not in word: 
+                end +=1
+                word = s[begin:end]
+                #print(word,'================')
+                res.append(len(word))
+                
+            while end<len(s) and s[end] in word:
+                begin += 1
+                word = s[begin:end]
+                #print('-----------', word)
+       # print(res)
+        
+        return max(res)

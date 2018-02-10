@@ -1,0 +1,16 @@
+class Solution:
+    def g(self, n, s):
+        if len(s) == n*2:
+            self.res.append(''.join(s))
+            return 
+        self.g(n, s+['('])
+        self.g(n, s+[')'])
+    def generateParenthesis(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        self.res = []
+        self.g(n, [])
+        
+        return len(self.res)

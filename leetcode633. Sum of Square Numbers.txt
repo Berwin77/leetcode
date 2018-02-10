@@ -1,0 +1,19 @@
+import math
+
+class Solution:
+    def judgeSquareSum(self, c):
+        """
+        :type c: int
+        :rtype: bool
+        """
+        begin = 0
+        end = int(math.sqrt(c))
+        while begin <= end:
+            _c = end**2 + begin**2
+            if _c > c:
+                end -= 1
+            elif _c < c:
+                begin += 1
+            else:
+                return True
+        return False

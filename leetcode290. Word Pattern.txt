@@ -1,0 +1,24 @@
+class Solution:
+    def wordPattern(self, pattern, str):
+        """
+        :type pattern: str
+        :type str: str
+        :rtype: bool
+        """
+        a = str.split()
+        if len(pattern)!= len(a):
+            return False
+        l = [pattern, a]
+        i = 0
+        di = {}
+        while i<len(pattern):
+            if l[0][i] not in di:
+                if l[1][i] not in list(di.values()):
+                    di[l[0][i]] = l[1][i]
+                else:
+                    return False
+            else:
+                if di[l[0][i]] != l[1][i]:
+                    return False
+            i += 1 
+        return True

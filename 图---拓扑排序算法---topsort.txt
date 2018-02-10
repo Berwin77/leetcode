@@ -1,0 +1,27 @@
+G = {
+    'C1':['C8', 'C3'],
+    'C2':['C3', 'C4', 'C5'],
+    'C3':['C4'],
+    'C4':['C7', 'C6'],
+    'C5':['C6'],
+    'C6':[],
+    'C7':[],
+    'C8':['C9'],
+    'C9':['C7']
+}
+
+def topsort(G):
+    index = {v:0 for v in G}  #有：就是字典  就需要用{}
+    for i in G.values():
+        for j in i:
+            index[j] +=1
+    q = [x for x in G if index[x]==0]
+    l = 0
+    while l < len(q):
+        for v in G[q[l]]:  #q是index=0的课程，G[q[l]]以q[l]为基础的课
+            index[v] -=1
+            if index[v] == 0:
+                q.append(v)
+        l +=1
+    return q if l==len(G) else None #防止有互箭头  Cx→Cy Cy→Cx
+print(topsort(G))

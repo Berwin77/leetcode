@@ -1,0 +1,22 @@
+class Solution:
+    def findContentChildren(self, g, s):
+        """
+        :type g: List[int]
+        :type s: List[int]
+        :rtype: int
+        """
+        if not s:
+            return 0
+        g = sorted(g)
+        s = sorted(s)
+        child = 0
+        sweet = 0
+        while child < len(g) and sweet < len(s):
+            if s[sweet] >= g[child]:
+                sweet += 1
+                child += 1
+            elif s[sweet] < g[child]:
+                sweet += 1
+            print(child)
+        return child
+            

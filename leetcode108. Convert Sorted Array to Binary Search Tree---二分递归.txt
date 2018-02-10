@@ -1,0 +1,15 @@
+##大神写的，佩服
+class Solution:
+    def toBST(self, nums):
+        if nums:
+            n = len(nums)//2
+            root = TreeNode(nums[n])
+            root.left = self.toBST(nums[:n])
+            root.right = self.toBST(nums[n+1:])
+            return root
+    def sortedArrayToBST(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: TreeNode
+        """
+        return self.toBST(nums)

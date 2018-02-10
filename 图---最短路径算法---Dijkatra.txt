@@ -1,0 +1,39 @@
+import heapq
+a, b, c, d, e, f = range(6)
+
+G = {
+    a: {b:2, c:1, d:4, f:10},
+    b: {a:2, c:4, e:3},
+    c: {a:1, b:4, d:2, f:8},
+    d: {c:2, a:4, e:1},
+    e: {b:3, f:7, d:1},
+    f: {a:10, c:8, e:7}
+    }
+def Dijkatra(G, s):
+    n = len(G)
+    inf = float('inf')
+    D = {v: inf for v in G}
+    P = {}
+    h =[]
+    D[s] = 0
+    ss = set([s])
+    v = s
+    for _ in range(n):
+        for u, w in G[v].items():
+            d = D[v] + G[v][u]
+            if D[u] > d:
+                D[u] = d
+                P[u] = v
+                heapq.heappush(h, (d, v, u))
+        while h:
+            _, _, v = heapq.heappop(h)
+            if v not in ss:
+                ss.add(v)
+                break
+        else:
+            break
+    return D, P
+a, b = Dijkatra(G, a)
+print(a)
+print('=======================')
+print(b)

@@ -1,0 +1,21 @@
+from collections import Counter 
+class Solution:
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        d = Counter(s)
+        l = 0
+        hasood = 0
+        for w, i in d.items():
+            if i%2==0:
+                l+=i
+            elif i%2 ==1:
+                hasood = 1
+                l+= i-1
+        if hasood !=0:
+            return l+1
+        else:
+            return l
+        

@@ -1,0 +1,33 @@
+class Solution:
+    def removeKdigits(self, num, k):
+        """
+        :type num: str
+        :type k: int
+        :rtype: str
+        """
+        n = len(num)
+        if n==k:
+            return "0"
+
+        l = []
+        for i in range(n):
+            a = int(num[i])
+            while(len(l)!=0 and l[-1]>a and k>0):
+                l.pop()
+                k -= 1
+            
+            if (a !=0 or len(l)!=0):#防止删除后第一位是0 例如：10200 删除完不能是0200
+                l.append(a)
+        while (len(l)!=0 and k>0):
+            l.pop()
+            k -= 1
+        st = ''
+        for i in l:
+            st += str(i)
+        if st == "":#防止出现 删除后是0 但是我们将0删去了  例如 10 删除1位 应该是0 但是由于上面的条件  不让0入栈
+            return "0"
+        else:
+            return st[1:]
+            
+        return st
+                    

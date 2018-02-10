@@ -1,0 +1,48 @@
+from collections import Counter 
+class Solution:
+    ##判断dict的value是否都小于等于0 因为小于等于0代表word里出现了t中的所有字符一次或一次以上
+    def panduan(self, s):
+        for i in s:
+            if i>0:
+                return False
+        return True
+    def minWindow(self, s, t):
+        """
+        :type s: str
+        :type t: str
+        :rtype: str
+        """
+        ##用Counter来直接做字典
+        d = Counter(t)
+        
+        begin = 0
+        end = 0
+        word = []
+        n = len(s)
+        res = ['',float("inf")]##定义一个初始值和长度，如果没有，就返回‘’
+        while end<n:
+            ###第一个while是用end探测包含abc的index值
+            while end <n: 
+                if s[end] in d:
+                    d[s[end]]-=1
+                end += 1
+                word = s[begin:end]
+                ##如果子串出现t， 结束循环
+                if self.panduan(list(d.values())):    
+                    #print('-----------------', word)
+                    break
+            ###第二个while用begin寻找包含字串的起始点，并记录给word
+            while begin<=end and self.panduan(list(d.values())):
+                word = s[begin:end]
+                ##判断 如果len（word）小于初始值， 将res替换成现在的
+                if len(word)<res[1]:
+                    res = [word, len(word)]
+                ##如果s[begin]在t中，将字典中d[s[begin]]+1
+                if s[begin] in d:
+                    d[s[begin]] += 1
+                begin += 1
+                ####循环过后，s[begin:end]没有完整的包含t
+            ###用第三个while删除掉无关的字符，使下一次s[begin:end]长度最小
+            while begin<n and begin<=end and s[begin] not in d:
+                begin += 1
+        return res[0]

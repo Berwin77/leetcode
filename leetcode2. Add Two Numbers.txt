@@ -1,0 +1,42 @@
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        def transform(s):
+            a = 0
+            i = 0
+            while i<len(s):
+                a += s[i]*(10**i)
+                i += 1
+            return a
+        def intransform(s):
+            l = []
+            j = 1
+            while s:
+                l.append(s%10)
+                s = s//(10)
+                j += 1
+            return l
+        s1 =[]
+        s2 =[]
+        while l1:
+            s1.append(l1.val)
+            l1 = l1.next
+        while l2:
+            s2.append(l2.val)
+            l2 = l2.next
+        result = intransform(transform(s1)+transform(s2))
+        if result:
+            head = ListNode(result[0])
+            node = head
+            m = 1
+            while m<len(result):
+                node.next = ListNode(result[m])
+                node = node.next
+                m += 1
+            return head
+        else:
+            return ListNode(0)

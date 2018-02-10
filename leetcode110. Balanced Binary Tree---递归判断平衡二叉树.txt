@@ -1,0 +1,54 @@
+##自己写的递归，判断平衡二叉树  
+###先求左右子树的深度
+class Solution:
+    def depth(self, node):
+        if not node:
+            return 0
+        dl = self.depth(node.left)
+        dr = self.depth(node.right)
+        return max(dl,dr)+1
+    def Balanced(self, node):
+        if self.b == False:
+            return False
+        if not node:
+            return True
+        rl = self.depth(node.left)    
+        rr = self.depth(node.right)
+        if abs(rl-rr)>1:
+            return False
+        
+        if self.Balanced(node.left) and self.Balanced(node.right):
+            return True
+        return False
+            
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        self.b = True
+        return self.Balanced(root)
+###大神写的：
+class Solution:
+        
+    def Balanced(self, node):
+        if not node:
+            return 0
+        dl = self.Balanced(node.left)
+        if dl == -1:
+            return -1
+        dr = self.Balanced(node.right)
+        if dr == -1:
+            return -1
+        if abs(dr-dl)<=1:
+            return max(dl,dr)+1
+        else:
+            return -1
+        
+            
+    def isBalanced(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        return not self.Balanced(root) == -1

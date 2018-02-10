@@ -1,0 +1,28 @@
+###自己
+from collections import deque
+class Solution: 
+    def yanghui(self, k):
+        q = deque([1])
+        for i in range(k):
+            for _ in range(i):
+                q.append(q.popleft() + q[0])
+            q.append(1)
+        return list(q)  ###转化为list
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        return self.yanghui(rowIndex)
+
+###大神
+class Solution:
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        row = [1]
+        for _ in range(rowIndex):
+            row = [x + y for x, y in zip([0]+row, row+[0])]
+        return row

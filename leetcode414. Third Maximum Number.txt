@@ -1,0 +1,29 @@
+class Solution:
+    def thirdMax(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        nums = list(set(nums))
+        if len(nums) < 3:
+            return max(nums)
+        res = sorted(nums[:3], reverse=True)
+        for i in nums[3:]:
+            if i > res[-1]:
+                res.pop()
+                res.append(i)
+                res.sort(reverse=True)
+        return res[-1]
+        
+##标准答案
+class Solution:
+    def thirdMax(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        nums = set(nums)
+        if len(nums) >= 3:
+            nums.remove(max(nums))
+            nums.remove(max(nums))
+        return max(nums)         

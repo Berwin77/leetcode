@@ -1,0 +1,12 @@
+from collections import Counter
+class Solution:
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        c = Counter(nums)
+        n = len(nums)//2
+        for s in c:
+            if c[s] >n:
+                return s

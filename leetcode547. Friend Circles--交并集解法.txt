@@ -1,0 +1,11 @@
+class Solution:
+    def findCircleNum(self, M):
+        res = [k for k in range(len(M))]
+        for i in range(len(M)):
+            for j in range(len(M[0])):
+                if M[i][j] == 1 and i != j:
+                    for n in range(len(res)):
+                        if res[n] == res[i] or res[n] == res[j]:
+                            ###用j来替换i是对的，但是用i来替换j就是错的
+                            res[n] = res[j]
+        return len(set(res))

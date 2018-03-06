@@ -1,0 +1,82 @@
+class SegmentTree(object):
+    def __init__(self, nums, start=None, end=None):
+        ###一个线段树包含五个初始值  
+        ### self.left 数组起始  self.right 数组结束  相当于包含nums[self.left, self.right+1]中的值
+        ### self.val 该节点的值
+        ### self.left_son 该节点的左子节点    self.right_son 该节点的右子节点
+        n = len(nums)
+        if start == None:
+            self.left, self.right = 0, n-1
+        else:
+            self.left, self.right = start, end
+        self.mid = (self.left + self.right)//2
+        self.left_son, self.right_son = None, None
+        self.val = 0
+        if self.left > self.right:
+            return 
+        if self.left == self.right:
+            self.val = nums[self.left]
+        else:
+            self.left_son = SegmentTree(nums, self.left, self.mid)
+            self.right_son = SegmentTree(nums, self.mid+1, self.right)
+            self.val = self.left_son.val + self.right_son.val
+    def print_tree(self):###前序遍历线段树
+        print('[%s,(%s,%s)]'%( self.val, self.left, self.right))
+        if self.left_son:
+            self.left_son.print_tree()
+        if self.right_son:
+            self.right_son.print_tree()
+    def search_sum_range(self, i, j):###查找以i，j为两段的线段的和
+        if i == self.left and j == self.right:
+            return self.val
+        elif self.left > j or self.right < i:
+            return 0
+        else:
+            if i > self.mid:
+                return self.right_son.search_sum_range(i, j)
+            elif j<= self.mid:
+                return self.left_son.search_sum_range(i, j)
+            else:
+                return self.left_son.search_sum_range(i, self.mid) + self.right_son.search_sum_range(self.mid+1, j)
+            
+            
+    def update(self, i, val):###更改某个下标的值
+        if i == self.left and i == self.right:
+            self.val = val
+        else:
+            if i <= self.mid:
+                self.left_son.update(i, val)
+            else:
+                self.right_son.update(i, val)
+            self.val = self.left_son.val + self.right_son.val
+
+class NumArray:
+
+    def __init__(self, nums):
+        """
+        :type nums: List[int]
+        """
+        self.tree = SegmentTree(nums)
+
+    def update(self, i, val):
+        """
+        :type i: int
+        :type val: int
+        :rtype: void
+        """
+        self.tree.update(i, val)
+
+    def sumRange(self, i, j):
+        """
+        :type i: int
+        :type j: int
+        :rtype: int
+        """
+        return self.tree.search_sum_range(i, j)
+        
+
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# obj.update(i,val)
+# param_2 = obj.sumRange(i,j)

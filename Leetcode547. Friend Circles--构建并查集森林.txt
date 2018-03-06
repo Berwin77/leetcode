@@ -1,0 +1,32 @@
+###构建并交集森林
+class DisjointSet:
+    def __init__(self, n):
+        self.idd = [i for i in range(n)] 
+        self.count = n
+        self.size = [1] * n
+    def find(self, p):
+        while p != self.idd[p]:
+            self.idd[p] = self.idd[self.idd[p]]
+            p = self.idd[p]    
+        return self.idd[p]
+    def union(self, p, q):
+        pid = self.find(p)
+        qid = self.find(q)
+        if (pid == qid):
+            return
+        if self.size[pid] < self.size[qid]:
+            self.idd[pid] = qid
+            self.size[qid] += self.size[pid]
+        else:
+            self.idd[qid] = pid
+            self.size[pid] += self.size[qid]
+        self.count -= 1 
+class Solution:
+    def findCircleNum(self, M):
+        nn = len(M)
+        a = DisjointSet(nn)
+        for i in range(nn):
+            for j in range(nn):
+                if M[i][j] == 1:
+                    a.union(i, j)
+        return a.count

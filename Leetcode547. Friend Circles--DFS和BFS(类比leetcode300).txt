@@ -1,0 +1,29 @@
+from collections import deque
+class Solution:
+    ###比leetcode200 更简单，因为朋友圈是对称的 A和B是好友  B和A也一定是好友， 所以矩阵一定是对称的   而小岛可能是非对称的
+    def search_DFS(self, x, M):
+        self.v.add(x)
+        for k in range(len(M[x])):
+            if M[x][k] == 1 and k not in self.v:
+                self.search_DFS(k, M)
+    def search_BFS(self, x,  M):
+        self.v.add(x)
+        q = deque([x])
+        while q:
+            x = q.pop()
+            for k in range(len(M[x])):
+                if M[x][k] == 1 and k not in self.v:
+                    q.append(k)
+                    self.v.add(k)
+    def findCircleNum(self, M):
+        """
+        :type M: List[List[int]]
+        :rtype: int 
+        """
+        self.v = set()
+        nums = 0
+        for i in range(len(M)):
+                if i not in self.v:
+                    self.search_BFS(i, M)
+                    nums += 1
+        return nums

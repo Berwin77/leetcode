@@ -1,0 +1,33 @@
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.isEnd = False
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+    def add(self, word):
+        node = self.root
+        for char in word:
+            node = node.children.setdefault(char, TrieNode())
+        node.isEnd = True
+    def find(self, word):
+        node = self.root
+        for char in word:
+            node = node.children.get(char)
+            if node == None:
+                return False
+        return node.isEnd
+    def startsWith(self, prefix):
+        ###返回bool类型
+        ###是否有以特定前缀prefix开头的单词
+        node = self.root
+        for char in prefix:
+            node = node.children.get(char)
+            if node is None:
+                return False
+        return True
+tree = Trie()
+tree.add("abce")
+tree.add("bcd")
+print(tree.find('ce'))
+print(tree.find('bc'))

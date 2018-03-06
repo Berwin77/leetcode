@@ -1,0 +1,90 @@
+###用队列
+import collections
+class Solution:
+    def trapRainWater(self, heightMap):
+        """
+        :type heightMap: List[List[int]]
+        :rtype: int
+        """
+        if len(heightMap) == 0:
+            return 0
+        dx = [0, 0, -1, 1]
+        dy = [1, -1, 0, 0]
+        h = collections.deque([])
+        he = len(heightMap)
+        wi = len(heightMap[0])
+        v = set([(0, 0), (he-1, 0), (0, wi-1), (he-1, wi-1)])
+        for x in [0 , he-1]:
+            for y in range(1, wi-1):
+                h.append((x, y, heightMap[x][y]))
+        for j in [0, wi-1]:
+            for i in range(1, he-1):
+                h.append((i, j, heightMap[i][j]))
+        ssum = 0
+        h = collections.deque(sorted(h, key=lambda z: z[2], reverse=False))
+        while h:
+            h = collections.deque(sorted(h, key=lambda z: z[2], reverse=False))
+            a, b, c = h.popleft()
+            ###对四周进行检测
+            for n in range(4):
+                newx = a + dx[n]
+                newy = b + dy[n]
+                if newx < 0 or newx > he-1 or newy < 0 or newy > wi-1 or (newx, newy) in v or (newx, newy, heightMap[newx][newy]) in h:
+                    continue
+                # if c < heighrMap[newx][newy]:
+                #     h.append((newx, newy, heighrMap[newx][newy]))
+                if c > heightMap[newx][newy]:
+                    ssum += c-heightMap[newx][newy]
+                    heightMap[newx][newy] = c
+                h.append((newx, newy, heightMap[newx][newy]))
+                v.add((newx, newy))
+            v.add((a, b))
+        return ssum     
+###用优先级队列 heapq
+import collections
+import heapq
+class Solution:
+    def trapRainWater(self, heightMap):
+        """
+        :type heightMap: List[List[int]]
+        :rtype: int
+        """
+        if len(heightMap) == 0:
+            return 0
+        dx = [0, 0, -1, 1]
+        dy = [1, -1, 0, 0]
+        h = []
+        
+        he = len(heightMap)
+        wi = len(heightMap[0])
+        v = set([(0, 0), (he-1, 0), (0, wi-1), (he-1, wi-1)])
+        for x in [0 , he-1]:
+            for y in range(1, wi-1):
+                heapq.heappush(h, (heightMap[x][y], x, y))
+        for j in [0, wi-1]:
+            for i in range(1, he-1):
+                heapq.heappush(h, (heightMap[i][j], i, j))
+        ssum = 0
+        ###用普通的队列需要每一次进行排序
+        #h = collections.deque(sorted(h, key=lambda z: z[2], reverse=False))
+        while h:
+            ###用普通的队列需要每一次进行排序
+            #h = collections.deque(sorted(h, key=lambda z: z[2], reverse=False))
+            c, a, b = heapq.heappop(h)
+            ###对四周进行检测
+            for n in range(4):
+                newx = a + dx[n]
+                newy = b + dy[n]
+                if newx < 0 or newx > he-1 or newy < 0 or newy > wi-1 or (newx, newy) in v or (newx, newy, heightMap[newx][newy]) in h:
+                    continue
+                if c > heightMap[newx][newy]:
+                    ssum += c-heightMap[newx][newy]
+                    heightMap[newx][newy] = c
+                heapq.heappush(h, (heightMap[newx][newy], newx, newy))
+                v.add((newx, newy))
+            v.add((a, b))
+        return ssum     
+                    
+                
+                    
+                          

@@ -1,0 +1,37 @@
+###自己写的
+class Solution:
+    def findCircleNum(self, M):
+        res = [k for k in range(len(M))]
+        for i in range(len(M)):
+            for j in range(len(M[0])):
+                if M[i][j] == 1 and i != j:
+                    for n in range(len(res)):
+                        if res[n] == res[i] or res[n] == res[j]:
+                            ###用j来替换i是对的，但是用i来替换j就是错的
+                            res[n] = res[j]
+        return len(set(res))
+###标准的
+class DisjointSet:
+    def __init__(self, n):
+        self.idd = [i for i in range(n)] ###idd是每一个人所属的集合
+        self.count = n
+    def find(self, p):    
+        return self.idd[p]
+    def union(self, p, q):
+        pid = self.find(p)
+        qid = self.find(q)
+        if (pid == qid):
+            return
+        for i in range(len(self.idd)):
+            if self.idd[i] == pid:
+                self.idd[i] = qid
+        self.count = len(set(self.idd))
+class Solution:
+    def findCircleNum(self, M):
+        nn = len(M)
+        a = DisjointSet(nn)
+        for i in range(nn):
+            for j in range(nn):
+                if M[i][j] == 1:
+                    a.union(i, j)
+        return a.count

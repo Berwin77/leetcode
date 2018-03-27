@@ -1,0 +1,47 @@
+class jd:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+class Solution:
+    def reverseBetween(self, head, m, n):
+        """
+        :type head: ListNode
+        :type m: int
+        :type n: int
+        :rtype: ListNode
+        """
+        prenode = None
+        result = head
+        i = 1
+        while head and i < m:
+            prenode = head
+            head = head.next
+            i += 1
+        curnode = head
+        changelen = n-m+1
+        newnode = None
+        while head and changelen:
+            temp = head.next
+            head.next = newnode
+            newnode = head
+            head = temp
+            changelen -= 1
+        laternode = head
+        curnode.next = laternode
+        if prenode:##链接链逆置前一位的节点和逆置后第一位的节点
+            prenode.next = newnode
+        else:##更新链表头结点
+            result = newnode
+        return result
+a = jd(55)
+b = jd(66)
+c = jd(77)
+d = jd(88)
+a.next = b
+b.next = c
+c.next = d
+m = Solution()
+f = m.reverseBetween(a, 1, 3)
+while f:
+    print(f.data)
+    f = f.next

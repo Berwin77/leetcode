@@ -1,0 +1,25 @@
+def parttion(v, left, right):##一次调用，将比这个数小的放置在这个数之前，比这个数大的放置在这个数之后
+    key = v[left]
+    start = left
+    end = right
+    while start < end:
+        while start < end and v[end]>=key :
+            end -= 1
+        v[start] = v[end]
+        while start < end and v[start] <=key:
+            start += 1
+        v[end] = v[start]
+        v[start] = key
+    return start
+def quicksort(nums, left, right):
+    if left < right:
+        p = parttion(nums, left, right)
+        quicksort(nums, left, p-1)
+        quicksort(nums, p+1, right)
+    return nums
+    
+s = [6, 8, 1, 4, 3, 9, 5, 4, 11, 2, 2, 15, 6]
+print("before sort:",s)
+s1 = quicksort(s, left = 0, right = len(s) - 1)
+print("after sort:",s1)
+        

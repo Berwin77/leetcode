@@ -1,0 +1,40 @@
+class Solution:
+    ###二分查找来源于leetcode35题的变形
+    def searchInsert(self, nums, target):
+        begin = 0
+        end = len(nums)-1
+        
+        if target<=nums[begin]:
+            nums[begin] = target
+            return nums
+        if target>nums[end]:
+            nums[end] = target
+            return nums
+        
+        while begin<=end:
+            
+            mid = (begin+end)//2
+            if target == nums[mid]:
+                return nums
+            elif target>nums[mid]:
+                begin = mid+1
+            elif target<nums[mid]:
+                end = mid-1
+        nums[begin] = target
+        return nums
+    def lengthOfLIS(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        ###用栈的思想 
+        if len(nums) == 0 or len(nums) == 1:
+            return len(nums)
+        s = [nums[0]]
+        for i in range(1, len(nums)):
+            if nums[i] > s[-1]:
+                s.append(nums[i])
+            else:
+                ###加入二分查找，时间缩短为O(nlogn)
+                s = self.searchInsert(s, nums[i])
+        return len(s)

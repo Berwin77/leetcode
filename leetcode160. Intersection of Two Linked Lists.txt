@@ -1,0 +1,65 @@
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+##第一种方法，简单粗暴，两次遍历
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        s = set([])
+        while headA :
+            s.add(headA)
+            headA = headA.next
+        while headB:
+            if headB in s:
+                return headB
+            headB = headB.next
+        return None
+##第二种方法，用set()时间复杂度变快
+class Solution(object):
+    def getIntersectionNode(self, headA, headB):
+        """
+        :type head1, head1: ListNode
+        :rtype: ListNode
+        """
+        s = set([])
+        while headA :
+            s.add(headA)
+            headA = headA.next
+        while headB:
+            if headB in s:
+                return headB
+            headB = headB.next
+        return None
+
+##第三种方法，一次遍历即可
+###先求两个链表长度，长度相减
+class Solution:
+    def bianli(self, root):
+        if not root:
+            return 0
+        i = 0
+        while root:
+            i += 1
+            root = root.next
+        return i
+    def FindFirstCommonNode(self, pHead1, pHead2):
+        i = self.bianli(pHead1)
+        j = self.bianli(pHead2)
+        if j > i:
+            while j-i != 0:
+                pHead2 = PHead2.next
+                j -= 1
+        elif i > j:
+            while i-j != 0:
+                pHead1 = pHead1.next
+                i -= 1
+        while pHead1 != pHead2:
+            pHead1 = pHead1.next
+            pHead2 = pHead2.next
+        return pHead1

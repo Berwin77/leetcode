@@ -1,0 +1,26 @@
+class Solution:
+    def calculateMinimumHP(self, dungeon):
+        """
+        :type dungeon: List[List[int]]
+        :rtype: int
+        """
+        if len(dungeon) == 0:
+            return 0
+        dp = []
+        dp = dungeon
+        n = len(dungeon)
+        m = len(dungeon[0])
+        if dp[n-1][m-1] >= 0:
+            dp[n-1][m-1] = 1
+        else:
+            dp[n-1][m-1] = -dp[n-1][m-1] + 1
+        for ii in range(m-2, -1, -1):
+            dp[n-1][ii] = max(1, dp[n-1][ii+1] - dungeon[n-1][ii])
+        for jj in range(n-2, -1, -1):
+            dp[jj][m-1] = max(1, dp[jj+1][m-1] - dungeon[jj][m-1])
+        #print('dp=', dp)
+        for i in range(n-2, -1, -1):
+            for j in range(m-2, -1, -1):
+                dp_min = min(dp[i+1][j], dp[i][j+1])
+                dp[i][j] = max(1, dp_min - dungeon[i][j])
+        return dp[0][0]

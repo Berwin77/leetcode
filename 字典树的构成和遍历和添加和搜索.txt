@@ -1,0 +1,68 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+class TrieNode:###字典树的节点
+    def __init__(self):
+        self.children = {}
+        self.isEnd = False
+class Trie:###字典树
+    def __init__(self):
+        self.root = TrieNode()
+    def insert(self, word):###添加、插入单词
+        node = self.root
+        for char in word:
+            node = node.children.setdefault(char, TrieNode())
+        node.isEnd = True
+    def search(self, word):###寻找单词的是否在字典树中
+        node = self.root
+        for char in word:
+            node = node.children.get(char)
+            if node == None:
+                return False
+        return node.isEnd
+    def startsWith(self, prefix): ###是否有某一个前缀开头的单词
+        ###返回bool类型
+        ###是否有以特定前缀prefix开头的单词
+        node = self.root
+        for char in prefix:
+            node = node.children.get(char)
+            if node is None:
+                return False
+        return True
+        
+    def preOrder(self, root): ###遍历字典树
+        if root == {}:
+            print('end')
+            return 
+        q = root
+        for i in q:
+            print(i) ###前序遍历
+            self.preOrder(q[i].children, layer+1)
+            #print(i) ###后序遍历
+    def get_all_words(self, root, res, l):###获取全部的字符串
+        if root == {}:
+            res.append(l)
+            return 
+        q = root
+        for i in q:
+            self.get_all_words(q[i].children, res, l+i)
+        return res
+    def get_start(self, word, res): ###以word为起始的所有字符串   就是search方法   +  get_all_words方法
+        node = self.root
+        for char in word:
+            node = node.children.get(char)
+            if node is None:
+                return False
+        res = self.get_all_words(node.children, res, '')
+        if res==[]:
+            return [word]
+        else:
+            return [word+k for k in res]
+obj = Trie()
+obj.insert('abc')
+obj.insert('abe')
+obj.insert('acm')
+obj.insert('acd')
+obj.insert('fma')
+#print(obj.root.children['a'].children['b'].children['c'].children)
+#print(obj.get_all_words(obj.root.children, [], ''))
+print(obj.get_start('ac', []))

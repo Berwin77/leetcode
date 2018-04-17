@@ -1,0 +1,17 @@
+class Solution:
+    def maxArea(self, height):
+        h = height
+        if len(height) == 1 or len(height) == 0:
+            return 0
+        start = 0
+        end = len(height)-1
+        area = min(h[start], h[end])*(len(h)-1)
+        while start+1 < end:
+            if h[start] <= h[end]:
+                start += 1
+                
+            else:
+                end -= 1
+            tmp = min(h[start], h[end])*(end-start)
+            area = max(area, tmp)
+        return area

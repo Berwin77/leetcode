@@ -1,0 +1,72 @@
+class Solution:
+    def DFS(self, nums, index, S, avg):
+        if index == len(nums):
+            return len(set(S)) == 1
+        if nums[index] > avg:
+            return False
+        else:
+            for i in range(4):
+                if S[i] + nums[index] > avg:
+                    continue
+                S[i] += nums[index]
+                if self.DFS(nums, index+1, S, avg):
+                    return True
+                S[i] -= nums[index]
+            return False
+                        
+                    
+            
+        
+    def makesquare(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if len(nums) < 4:
+            return False
+        su = sum(nums)
+        if (su//4)*4 != su:
+            return False
+        avg = su//4
+        #print(avg)
+        nums = sorted(nums, reverse=True)
+        index = 0
+        S = [0,0,0,0]
+        return self.DFS(nums, index, S ,avg)
+        
+        
+class Solution:
+    def DFS(self, nums, index, S, avg):
+        if index == len(nums):
+            return len(set(S)) == 1
+        if nums[index] > avg:
+            return False
+        v = set()
+        for i in range(4):
+            if S[i] >= nums[index] and S[i] not in v:
+                v.add(S[i])
+                S[i] -= nums[index]
+                if self.DFS(nums, index+1, S, avg):
+                    return True
+                S[i] += nums[index]     
+        return False
+            
+                        
+                    
+            
+        
+    def makesquare(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if len(nums) < 4:
+            return False
+        su = sum(nums)
+        if (su//4)*4 != su:
+            return False
+        avg = su//4
+        nums = sorted(nums, reverse=True)
+        index = 0
+        S = [avg]*4
+        return self.DFS(nums, index, S ,avg)

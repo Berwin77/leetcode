@@ -1,0 +1,78 @@
+from collections import deque
+class Solution:
+    def d_same(self, word1, word2):
+        n = 0
+        for i in range(len(word1)):
+            if word1[i] == word2[i]:
+                n += 1
+        if n + 1 == len(word1):
+            return True
+        else:
+            return False
+    def to_dict(self, wordList):
+        d = {}
+        for i in wordList:
+            for j in wordList:
+                if self.d_same(i, j):
+                    if i not in d:
+                        d[i] = [j]
+                    else:
+                        d[i].append(j)
+        return d
+    def ladderLength(self, beginWord, endWord, wordList):
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: int
+        """
+        ###先做一个邻接表  用dict
+        if endWord not in wordList:
+            return 0
+        if beginWord not in wordList:
+            wordList.append(beginWord)
+        s = set()
+        d = self.to_dict(wordList)
+        print(d)
+        q = deque([(beginWord, 1)])
+        while q:
+            word, i = q.popleft()
+            s.add(word)
+            if word == endWord:
+                return i
+            if word not in d:
+                return 0
+            for w in d[word]:
+                if w not in s:
+                    q.append((w, i+1))
+            else:
+                continue
+        return 0
+
+class Solution:  
+    # @param start, a string  
+    # @param end, a string  
+    # @param dict, a set of string  
+    # @return an integer  
+    def ladderLength(self, start, end, wordList): 
+        if end not in wordList:
+            return 0
+        #wordList.append(end)  
+        q=[]  
+        q.append((start,1))  
+        while q:  
+            curr=q.pop(0)  
+            curword=curr[0]  
+            curlen=curr[1]  
+            if curword==end:  
+                return curlen  
+            for i in range(len(curword)):  
+                part1=curword[:i]  
+                part2=curword[i+1:]  
+                for j in 'qwertyuiopasdfghjklzxcvbnm':  
+                    if curword[i]!=j:  
+                        nextword=part1+j+part2  
+                        if nextword in wordList:  
+                            q.append((nextword,curlen+1))  
+                            wordList.remove(nextword)  
+        return 0   

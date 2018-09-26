@@ -1,0 +1,34 @@
+class Solution:
+    def maxProfit(self, k, prices):
+        """
+        :type k: int
+        :type prices: List[int]
+        :rtype: int
+        """
+        if k == 0 or len(prices) == 0:
+            return 0
+        nums = prices
+        n = len(nums)
+        if k <n:
+            result = self.solve7_1(prices, k)
+        else:
+            result = self.solve2_1(prices)
+        return result
+    def solve2_1(self, nums):
+        n = len(nums)
+        summ = 0
+        for i in range(1, n):
+            diff = nums[i] - nums[i-1]
+            summ += max(0, diff)
+        return summ
+            
+    def solve7_1(self, nums, k):
+        n = len(nums)
+        local = [[0]*(k+1) for _ in range(n)]
+        globall = [[0]*(k+1) for _ in range(n)]
+        for i in range(1, n):
+            diff = nums[i]-nums[i-1]
+            for j in range(1, k+1):
+                local[i][j] = max(globall[i-1][j-1]+max(diff, 0), local[i-1][j]+diff)
+                globall[i][j] = max(local[i][j], globall[i-1][j])
+        return globall[n-1][k]

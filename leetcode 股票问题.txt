@@ -1,0 +1,385 @@
+'''
+股票买卖问题一次性总结：
+1. 只能买卖一次
+2. 买卖无限次
+3. 买卖无限次但是每次需要手续费a元
+4. 买卖无限次，但每次卖出后需要“冷静”一天
+5. 只能买卖两次
+6. 买卖小于等于两次
+7. 买卖小于等于k次
+
+参考文献：
+https://segmentfault.com/a/1190000006672807#articleHeader3
+https://blog.csdn.net/sinat_35261315/article/details/79023510
+'''
+
+################################## 1.只买卖一次 #########################################
+##输入: [7,1,5,3,6,4]
+##输出: 5
+###第一种 添加两个数组 一个是从第i位起，后面的最大值（包括第i位）， 另一个是第i位以及之前，最小值
+def solve1_1(nums):
+    if len(nums) == 0 or len(nums) == 1:
+        return 0
+    n1 = [0]*len(nums)
+    n2 = [0]*len(nums)
+    n2[0] = nums[0]
+    for i in range(1, len(nums)):
+        n2[i] = min(nums[i-1], nums[i])
+
+    n1[len(nums)-1] = nums[len(nums)-1]
+    for i in range(len(nums)-2, -1, -1):
+        n1[i] = max(nums[i], n1[i+1])
+    result = map(lambda x,y:x-y,  n1, n2)
+    return max(result)
+#print(solve1_1([7,1,5,3,6,4]))
+
+###第二种方法 思想一样 但是不创建两个数组
+
+def solve1_2(nums):
+    if len(nums) == 0 or len(nums) == 1:
+        return 0
+    minn = nums[0]###初始化minn最小值
+    max_diff = 0 ###初始化最大收益值
+    for i in range(1, len(nums)):
+        if nums[i-1] < minn:
+            minn = nums[i-1]
+        if max_diff< nums[i] - minn:
+            max_diff = nums[i] - minn
+    return max_diff
+#print(solve1_2([7,1,5,3,6,4]))
+
+################################## 2.可以买卖无限次 #########################################
+'''
+要求和上面一样，不过这次可以进行多次交易，即买，卖，买，卖，买，卖…，其中买卖不能在同一天进行
+
+这样就不能像上面那样只求一次了，其实仔细想一下，序列无非三种排列
+
+递增，假设A<B<C<D
+递减，假设A>B>C>D
+无序，假设A<B>C<D
+对于递增序列，最大的差值就是D−A，因为(D−A)=(D−C)+(C−B)+(B−A)>(D−C)+(B−A)
+对于递减序列，为0
+
+对于无序序列，总可以找到若干个递增序列，就上面的例子而言最大差值为(B−A)+(D−C)，而实际上也可以写成(D−C)+max(C−B,0)+(B−A)，和递增序列的形式是一样的
+
+所以只要依次计算prices[i]−prices[i−1]即可
+'''
+def solve2_1(nums):
+    result = 0
+
+    for i in range(1, len(nums)):
+
+        if nums[i]>nums[i-1]:
+            result += nums[i]-nums[i-1]
+    return result
+#print(solve2_1([1, 2, 1, 3, 0, 4]))
+
+################################## 3.买卖无限次但是需要手续费 ################################
+'''
+输入: prices = [1, 3, 2, 8, 4, 9], fee = 2
+输出: 8   解释: 能够达到的最大利润:  
+在此处买入 prices[0] = 1   在此处卖出 prices[3] = 8
+在此处买入 prices[4] = 4   在此处卖出 prices[5] = 9
+总利润: ((8 - 1) - 2) + ((9 - 4) - 2) = 8.
+'''
+
+'''
+第一解法：贪心算法  不是很好理解  个人不推荐
+选择的关键是找到一个最大后是不是能够卖掉stock，重新开始寻找买入机会。比如序列1 3 2 8，如果发现2小于3就完成交易买1卖3，此时由于fee=2，（3-1-fee）+(8-2-fee)<8-1-fee)，所以说明卖早了，令max是当前最大price，当（maxx-price[i]>=fee）时可以在max处卖出，且不会存在卖早的情况，再从i开始重新寻找买入机会。
+cur_diff记录了当前一次交易能得到的最大收益，只有当maxx-prices[i]>=fee时，才将cur_diff累加到总的收益中。最后一次交易不需要考虑是否早卖了，所以直接累加最后一次的cur_diff。
+
+'''
+
+def solve3_1(nums, fee):
+    ##每次收取fee元手续费
+    minn = nums[0]
+    maxx = nums[0]
+    result = 0
+    cur_diff = 0
+    for i in range(1, len(nums)):
+        minn = min(minn, nums[i])
+        maxx = max(maxx, nums[i])
+        print('min, max', minn, maxx)
+        cur_diff = max(cur_diff, nums[i]-minn-fee)
+        print('cur_diff', cur_diff)
+        if maxx - nums[i] >= fee:
+            result += cur_diff
+            cur_diff = 0
+            minn = nums[i]
+            maxx = nums[i]
+        print('result', result)
+    return result+cur_diff
+
+#print(solve3_1([1, 3, 2, 8, 4, 9], 2))
+
+
+'''
+第二种解法： 动态规划 
+分析每天的行为，我们可以知道，主要的行为就是售出和购入。所以我们建立两个动态规划数组：sold和hold，其中
+sold[i]保存的是第i天出售股票后的最大利润，有两个状态，一个是在i天售出的利润，
+或者保持前一天也就是sold[i-1]的售出利润，选择其中的最大利润。
+hold[i]保存的是第i天持有股票的最大利润，也有两个状态，一个是在i天购入的利润，
+或者保持前一天也就是hold[i-1]的持有利润，选择其中的最大利润。
+写为动态规划式为： 
+sold[i] = max(sold[i−1],hold[i−1]+prices[i]−fee); 
+hold[i] = max(Hold[i-1],sold[i−1]−prices[i])
+
+https://blog.csdn.net/Koala_Tree/article/details/78530510
+'''
+def solve3_2(nums, fee):
+    sold = [0]*len(nums)
+    hold = [0]*len(nums)
+    hold[0] = -nums[0]
+    for i in range(1, len(nums)):
+        sold[i] = max(sold[i-1], hold[i-1] + nums[i]-fee)
+        hold[i] = max(hold[i-1], sold[i-1] - nums[i])
+    return sold[len(nums)-1]
+#print(solve3_2([1, 3, 2, 8, 4, 9], 2))
+
+'''
+第三种解法： 简化第二种解法空间复杂度 O(1)
+'''
+def solve3_3(nums, fee):
+    sold = 0
+    hold = -nums[0]
+    for i in range(1, len(nums)):
+        sold_old = sold
+        sold = max(sold, hold + nums[i]-fee)
+        hold = max(hold, sold_old - nums[i])
+    return sold
+#print(solve3_3([1, 3, 2, 8, 4, 9], 2))
+
+############################## 4.买卖无限次，但每次卖出后需要“冷静”1天 #######################
+
+'''
+prices = [1, 2, 3, 0, 2]
+maxProfit = 3
+transactions = [buy, sell, cooldown, buy, sell]
+
+根据3_2的思想 动态规划 sold和hold
+思路： 
+sold[i] = max(hold[i-1] + price[i], sold[i-1])
+hold[i]  = max(sold[i-2] - price[i], hold[i-1]) 
+
+https://www.cnblogs.com/grandyang/p/4997417.html
+'''
+def solve4_1(nums):
+
+    if len(nums) == 0 or len(nums) == 1:
+        return 0
+    sold = [0] * len(nums)
+    hold = [0] * len(nums)
+    hold[0] = -nums[0]
+    for i in range(1, len(nums)):
+        sold[i] = max(hold[i - 1] + nums[i], sold[i - 1])
+        hold[i] = max(sold[i - 2] - nums[i], hold[i - 1])
+    return sold[len(nums) - 1]
+#print(solve4_1([2, 1, 3, 0, 0, 3, 2]))
+
+'''
+第二种方法  简化 solve4_1 
+'''
+
+
+def solve4_2(nums):
+
+    if len(nums) == 0 or len(nums) == 1:
+        return 0
+    sold = 0
+    pre_sold = 0
+    hold = -nums[0]
+    for i in range(1, len(nums)):
+        tmp = sold
+        sold = max(hold + nums[i], sold)
+        hold = max(pre_sold - nums[i], hold)
+        pre_sold = tmp
+    return sold
+#print(solve4_2([2, 1, 3, 0, 0, 3, 2]))
+
+
+################################## 5.只能买卖两次 #########################################
+
+##1, 2, 1, 3, 0, 4；最大收益为6，在第三天买入，第四天卖出，第五天买入，第六天卖出；
+'''
+第一种方式:
+两次股票交易的核心是可以定义一个交易点，在这个交易点之前可以做一次交易(赚的最大数目的钱为firstProf)，
+在这个交易点之后可以做一个交易(赚的最大数目的钱是secondProf)。
+那么要求的是max(firstProf+secondProf)。但是这个方法的时间复杂度是O(N^2)，空间复杂度是O(1)。
+'''
+def solve5_1(nums):
+    result = 0
+    for i in range(len(nums)):
+        k = solve1_2(nums[:i+1]) + solve1_2(nums[i:])
+        if result < k:
+            result = k
+    return result
+#print(solve5_1([1, 2, 1, 3, 0, 4]))
+
+'''
+第二种方式:
+不同于Best Time to Buy and Sell Stock I中定义的初始状态A[i]表示第i天卖出挣的最大数目的钱，
+这个更进一步直接定义A[i]表示前i天赚的最大数目的钱。minPrice表示从第0天到第i-1天中的最低价格。
+A[0]=0。（初始状态）
+A[1]=max(prices[1]-prices[0],A[0])
+A[2]=max(prices[2]-minPrice,A[1])
+即A[i]=max(price[i]-minPrice,A[i-1]).
+A[0]=0
+另外一次扫描从数组后向前扫描，
+定义B[i]表示从第i天到最后一天n能赚的最大数目的钱。maxPrice表示第i+1天到n天的最高价格。
+B[n]=0。（初始状态）
+B[n-1]=max(maxPrice-prices[n-1],B[n])
+B[n-2]=max(maxPrice-prices[n-2],B[n-1])
+即B[i]=max(maxPrice-prices[i],B[i+1])
+B[n]=0
+那么以第i天为分割点能赚的最多数目的钱为A[i]+B[i]
+问题的解为max{A[i]+B[i]}。0<=i<=n。
+时间复杂度是O(N)，空间复杂度是O(N)。
+'''
+def solve5_2(nums):
+    result = 0
+    A = [0]*len(nums)
+    minn = nums[0]
+    for i in range(1, len(nums)):
+        if nums[i-1] < minn:
+            minn = nums[i-1]
+        A[i] = max(nums[i] - minn, A[i-1])
+    B = [0] * len(nums)
+    end = len(nums)
+    maxx = nums[end-1]
+    for i in range(end-2, -1, -1):
+        if nums[i+1] > maxx:
+            maxx = nums[i+1]
+        B[i] = max(maxx-nums[i], B[i+1])
+    #result = map(lambda x,y:x+y, A, B)
+    result = [A[i]+B[i] for i in range(len(A))]
+    return max(result)
+#print(solve5_2([1, 2, 1, 3, 0, 4]))
+
+'''
+最优化:时间复杂度O(n)，空间复杂度O(1)。
+第三种解法的核心是假设手上最开始只有0元钱，
+那么如果买入股票的价格为price，手上的钱需要减去这个price，
+如果卖出股票的价格为price，手上的钱需要加上这个price。
+它定义了4个状态：
+Buy1[i]表示前i天做第一笔交易买入股票后剩下的最多的钱；
+Sell1[i]表示前i天做第一笔交易卖出股票后剩下的最多的钱；
+Buy2[i]表示前i天做第二笔交易买入股票后剩下的最多的钱；
+Sell2[i]表示前i天做第二笔交易卖出股票后剩下的最多的钱；
+那么Sell2[i]=max{Sell2[i-1],Buy2[i-1]+prices[i]}
+       Buy2[i]=max{Buy2[i-1],Sell1[i-1]-prices[i]}
+       Sell1[i]=max{Sell[i-1],Buy1[i-1]+prices[i]}
+       Buy1[i]=max{Buy[i-1],-prices[i]}
+可以发现上面四个状态都是只与前一个状态有关，所以可以不使用数组而是使用变量来存储即可。
+'''
+def solve5_3(nums):
+    sell1 = 0
+    buy1 = -nums[0]
+    sell2 = 0
+    buy2 = 0
+    for i in range(1, len(nums)):
+        buy1 = max(buy1, -nums[i])
+        sell1 = max(sell1, buy1+nums[i])
+        buy2 = max(buy2, sell1-nums[i])
+        sell2 = max(sell2, buy2+nums[i])
+    return sell2
+#print(solve5_3([1, 2, 1, 3, 0, 4]))
+
+################################## 6.买卖小于等于2次 #########################################
+'''
+最多买两次就是第二种问题的一个变形，求买卖1次和买卖2次最大值，我们用solve4_2作为baseline来改造
+时间复杂度O(n),
+'''
+
+def solve6_1(nums):
+    result = 0
+    A = [0]*len(nums)###存从初始到第i天最大的收益
+    minn = nums[0]
+    for i in range(1, len(nums)):
+        if nums[i-1] < minn:
+            minn = nums[i-1]
+        A[i] = max(nums[i] - minn, A[i-1])
+    B = [0] * len(nums)### 存从第i天开始到最后一天的最大收益
+    end = len(nums)
+    maxx = nums[end-1]
+    for i in range(end-2, -1, -1):
+        if nums[i+1] > maxx:
+            maxx = nums[i+1]
+        B[i] = max(maxx-nums[i], B[i+1])
+
+    result = [A[i]+B[i] for i in range(len(A))]
+    return max(max(result), max(A))
+#print(solve6_1([1, 2, 1, 3, 0, 4]))
+
+'''
+也用solve5_3作为baseline来改造
+'''
+def solve6_2(nums):
+    sell1 = 0
+    buy1 = -nums[0]
+    sell2 = 0
+    buy2 = 0
+    for i in range(1, len(nums)):
+        buy1 = max(buy1, -nums[i])
+        sell1 = max(sell1, buy1+nums[i])
+        buy2 = max(buy2, sell1-nums[i])
+        sell2 = max(sell2, buy2+nums[i])
+    return max(sell2, sell1)
+#print(solve6_2([1, 2, 1, 3, 0, 4]))
+
+################################## 7.买卖小于等于k次 #########################################
+'''
+采用两种方法 均采用动态规划 复杂度相同： 时间复杂度O(n*k)，空间复杂度O(n) 
+https://blog.csdn.net/smile_watermelon/article/details/47445981
+
+第一种：
+
+这里我们需要两个递推公式来分别更新两个变量local和global，我们其实可以求至少k次交易的最大利润。
+定义local[i][j]为在到达第i天时最多可进行j次交易并且最后一次交易在最后一天卖出的最大利润，此为局部最优。
+定义global[i][j]为在到达第i天时最多可进行j次交易的最大利润，此为全局最优。它们的递推式为：
+
+
+local[i][j] = max(global[i-1][j-1]+max(diff,0), local[i-1][j]+diff); 
+global[i][j] = max(local[i][j], global[i-1][j])
+
+
+local[i][j] = max(global[i-1][j-1]+max(diff,0), local[i-1][j]+diff)
+需要看两个量，第一个是全局global到i-1天进行j-1次交易，然后加上今天的交易，
+如果今天是赚钱的话（也就是前面只要j-1次交易，最后一次交易取当前天）；
+第二个量则是取local第i-1天j次交易，然后加上今天的差值
+（这里因为local[i-1][j]比如包含第i-1天卖出的交易，所以现在变成第i天卖出，
+并不会增加交易次数，而且这里无论diff是不是大于0都一定要加上，
+因为否则就不满足local[i][j]必须在最后一天卖出的条件了）。
+
+
+global[i][j] = max(local[i][j], global[i-1][j])
+即，到第i天完成j次交易的最大收益，要么是第j次交易发生在第i天时的最大收益，
+要么是到第i-1天完成j次交易时的最大收益。
+
+
+如果k>len(nums) 则问题退化成 问题2
+'''
+def solve7_1(nums, k):
+
+    if k == 0 or len(nums) ==0:
+        return 0
+    n = len(nums)
+    if k > n:
+        ###退化成solve2_1
+        summ = 0
+        for i in range(1, n):
+            diff = nums[i]- nums[i-1]
+            summ+= max(0, diff)
+        return summ
+    else:
+        ### 行取 n  列取 k+1  因为交易笔数需要从1-k,第0列作为递推条件必须有
+        local = [[0]*(k+1) for _ in range(n)]
+        globall = [[0]*(k+1) for _ in range(n)]
+        for i in range(1, n):
+            diff = nums[i]-nums[i-1]
+            for j in range(1, k+1):
+                local[i][j] = max(globall[i-1][j-1]+max(diff, 0), local[i-1][j]+diff)
+                globall[i][j] = max(local[i][j], globall[i-1][j])
+        return globall[n-1][k]
+
+#print(solve7_1([2,4,1],2))
+
